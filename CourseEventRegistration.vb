@@ -7,136 +7,143 @@ Imports System.Xml
 Imports System.Runtime.InteropServices
 Namespace CourseEventRegistration
 #Region "Registration"
-   Public Class Registration
-      Private _registrationId As Long
-      Private _studentId As Long
-      Private _registrationFee As Decimal
-      Private _submittedOn As Date
-      Private _errorMessage As String
-      Private _connectionString As String
-      Private _processedOn As Date
+	Public Class Registration
+		''' <summary>
+		''' Changes made between old computer to 6520. Before adding to git
+		''' add new property ProcessorRemarks
+		''' in studentDC.Insert add dim errorMessage as string and in try con.open() add to the catch errorMessage = ex.Message.
+		''' This was only done for debugging so I can break there and see the error. For now I am leaving it there.
+		''' </summary>
+		''' <remarks></remarks>
+		Private _registrationId As Long
+		Private _studentId As Long
+		Private _registrationFee As Decimal
+		Private _submittedOn As Date
+		Private _errorMessage As String
+		Private _connectionString As String
+		Private _processedOn As Date
 		Private _processedBy As String
 		Private _processorsRemarks As String
-      Private _coursesTaken As Collection
-      Private _status As String 'Submitted, Paid, Reviewed
-      Private _statusid As Integer
-      Private _student As Student
-      Private _statuses As Collection
-      Public Sub New(ByVal ConnectionString As String)
-         _coursesTaken = New Collection
-         _statuses = New Collection
-         Status = "Submitted"
-         StatusId = 1
-         SubmittedOn = Now()
-         RegistrationId = 0
-         _student = New Student
-         ProcessedBy = ""
-         ProcessedOn = Nothing
-         Me.ConnectionString = ConnectionString
-         If String.IsNullOrEmpty(ConnectionString) = False Then
-            Dim cs As RegistrationStatus
-            Dim dt As DataTable
-            Dim dc As New RegistrationDC
-            dt = dc.LoadCourseRegistrationStatus(ConnectionString)
-            For i As Integer = 0 To dt.Rows.Count - 1
-               cs = New RegistrationStatus
-               cs.Description = dt.Rows(i)("description")
-               cs.StatusId = dt.Rows(i)("Statusid")
-               cs.SystemName = dt.Rows(i)("SystemName")
-               Statuses.Add(cs)
-            Next
-            Status = GetStatusById(StatusId)
-         End If
-      End Sub
-      Public Property CoursesTaken() As Collection
-         Get
-            Return _coursesTaken
-         End Get
-         Set(ByVal value As Collection)
-            _coursesTaken = value
-         End Set
-      End Property
-      Public Property Statuses() As Collection
-         Get
-            Return _statuses
-         End Get
-         Set(ByVal value As Collection)
-            _statuses = value
-         End Set
-      End Property
-      Public Property Student() As Student
-         Get
-            Return _student
-         End Get
-         Set(ByVal value As Student)
-            _student = value
-         End Set
-      End Property
-      Public Property RegistrationId() As Integer
-         Get
-            RegistrationId = _registrationId
-         End Get
-         Set(ByVal Value As Integer)
-            _registrationId = Value
-         End Set
-      End Property
-      Public Property StudentId() As Integer
-         Get
-            StudentId = _studentId
-         End Get
-         Set(ByVal Value As Integer)
-            _studentId = Value
-         End Set
-      End Property
-      Public Property StatusId() As Integer
-         Get
-            StatusId = _statusid
-         End Get
-         Set(ByVal Value As Integer)
-            _statusid = Value
-         End Set
-      End Property
-      Public Property Status() As String
-         Get
-            Status = _status
-         End Get
-         Set(ByVal Value As String)
-            _status = Value
-            _statusid = GetStatusIdByStatusDescription(Value)
-         End Set
-      End Property
-      Public Property RegistrationFees() As Decimal
-         Get
-            Return _registrationFee
-         End Get
-         Set(ByVal value As Decimal)
-            _registrationFee = value
-         End Set
-      End Property
-      Public Property SubmittedOn() As Date
-         Get
-            SubmittedOn = _submittedOn
-         End Get
-         Set(ByVal Value As Date)
-            _submittedOn = Value
-         End Set
-      End Property
-      Public Property ProcessedOn() As Date
-         Get
-            ProcessedOn = _processedOn
-         End Get
-         Set(ByVal Value As Date)
-            _processedOn = Value
-         End Set
-      End Property
-      Public Property ProcessedBy() As String
-         Get
-            ProcessedBy = _processedBy
-         End Get
-         Set(ByVal Value As String)
-            _processedBy = Value
-         End Set
-      End Property
+		Private _coursesTaken As Collection
+		Private _status As String 'Submitted, Paid, Reviewed
+		Private _statusid As Integer
+		Private _student As Student
+		Private _statuses As Collection
+		Public Sub New(ByVal ConnectionString As String)
+			_coursesTaken = New Collection
+			_statuses = New Collection
+			Status = "Submitted"
+			StatusId = 1
+			SubmittedOn = Now()
+			RegistrationId = 0
+			_student = New Student
+			ProcessedBy = ""
+			ProcessedOn = Nothing
+			Me.ConnectionString = ConnectionString
+			If String.IsNullOrEmpty(ConnectionString) = False Then
+				Dim cs As RegistrationStatus
+				Dim dt As DataTable
+				Dim dc As New RegistrationDC
+				dt = dc.LoadCourseRegistrationStatus(ConnectionString)
+				For i As Integer = 0 To dt.Rows.Count - 1
+					cs = New RegistrationStatus
+					cs.Description = dt.Rows(i)("description")
+					cs.StatusId = dt.Rows(i)("Statusid")
+					cs.SystemName = dt.Rows(i)("SystemName")
+					Statuses.Add(cs)
+				Next
+				Status = GetStatusById(StatusId)
+			End If
+		End Sub
+		Public Property CoursesTaken() As Collection
+			Get
+				Return _coursesTaken
+			End Get
+			Set(ByVal value As Collection)
+				_coursesTaken = value
+			End Set
+		End Property
+		Public Property Statuses() As Collection
+			Get
+				Return _statuses
+			End Get
+			Set(ByVal value As Collection)
+				_statuses = value
+			End Set
+		End Property
+		Public Property Student() As Student
+			Get
+				Return _student
+			End Get
+			Set(ByVal value As Student)
+				_student = value
+			End Set
+		End Property
+		Public Property RegistrationId() As Integer
+			Get
+				RegistrationId = _registrationId
+			End Get
+			Set(ByVal Value As Integer)
+				_registrationId = Value
+			End Set
+		End Property
+		Public Property StudentId() As Integer
+			Get
+				StudentId = _studentId
+			End Get
+			Set(ByVal Value As Integer)
+				_studentId = Value
+			End Set
+		End Property
+		Public Property StatusId() As Integer
+			Get
+				StatusId = _statusid
+			End Get
+			Set(ByVal Value As Integer)
+				_statusid = Value
+			End Set
+		End Property
+		Public Property Status() As String
+			Get
+				Status = _status
+			End Get
+			Set(ByVal Value As String)
+				_status = Value
+				_statusid = GetStatusIdByStatusDescription(Value)
+			End Set
+		End Property
+		Public Property RegistrationFees() As Decimal
+			Get
+				Return _registrationFee
+			End Get
+			Set(ByVal value As Decimal)
+				_registrationFee = value
+			End Set
+		End Property
+		Public Property SubmittedOn() As Date
+			Get
+				SubmittedOn = _submittedOn
+			End Get
+			Set(ByVal Value As Date)
+				_submittedOn = Value
+			End Set
+		End Property
+		Public Property ProcessedOn() As Date
+			Get
+				ProcessedOn = _processedOn
+			End Get
+			Set(ByVal Value As Date)
+				_processedOn = Value
+			End Set
+		End Property
+		Public Property ProcessedBy() As String
+			Get
+				ProcessedBy = _processedBy
+			End Get
+			Set(ByVal Value As String)
+				_processedBy = Value
+			End Set
+		End Property
 
 		Public Property ProcessorRemarks() As String
 			Get
@@ -147,339 +154,339 @@ Namespace CourseEventRegistration
 			End Set
 		End Property
 
-      Public ReadOnly Property TotalAmount() As Decimal
-         Get
-            Dim t As Decimal
-            Dim c As CourseEventData
-            For i As Integer = 1 To CoursesTaken.Count
-               c = CoursesTaken.Item(i)
-               t += c.Tuition
-            Next
-            TotalAmount = t
-         End Get
-      End Property
-      Public Property ErrorMessage() As String
-         Get
-            ErrorMessage = _errorMessage
-         End Get
-         Set(ByVal Value As String)
-            _errorMessage = Value
-         End Set
-      End Property
-      Public Property ConnectionString() As String
-         Get
-            ConnectionString = _connectionString
-         End Get
-         Set(ByVal Value As String)
-            _connectionString = Value
-         End Set
-      End Property
-      Private Sub ClearRegistration()
-         _coursesTaken = New Collection
-         Status = "Submitted"
-         StatusId = 1
-         SubmittedOn = Now()
-         RegistrationId = 0
-         _student = New Student
-         ProcessedBy = ""
-         ProcessedOn = Nothing
-      End Sub
-      Private Function GetStatusById(ByVal StatusId As Integer) As String
-         Dim cs As New RegistrationStatus
-         Dim Status As String = ""
-         If Not Statuses Is Nothing Then
-            For i As Integer = 1 To Statuses.Count
-               cs = Statuses(i)
-               If cs.StatusId = StatusId Then
-                  Status = cs.Description
-                  Exit For
-               End If
-            Next
-         End If
-         GetStatusById = Status
-      End Function
-      Private Function GetStatusIdByStatusDescription(ByVal StatusDescription As String) As Integer
-         Dim cs As New RegistrationStatus
-         Dim StatusId As Integer = 0
-         If Not Statuses Is Nothing Then
-            For i As Integer = 1 To Statuses.Count
-               cs = Statuses(i)
-               If cs.Description.ToLower = StatusDescription.ToLower Then
-                  StatusId = cs.StatusId
-                  Exit For
-               End If
-            Next
-         End If
-         GetStatusIdByStatusDescription = StatusId
-      End Function
-      Public Sub LoadRegistration(ByVal RegistrationId As Integer)
-         Dim oDC As New RegistrationDC
-         Dim dsRegistration As New DataSet
-         Dim dt As DataTable
-         dsRegistration = oDC.GetRegistrationSetById(RegistrationId, Me.ConnectionString)
-         If dsRegistration.Tables.Count > 0 Then
-            'fill the properties with 
-            If dsRegistration.Tables(0).Rows.Count > 0 Then
-               'assume 1 row
-               dt = dsRegistration.Tables(0)
-               RegistrationId = dt.Rows(0)("CORegistrationID")
-               StudentId = dt.Rows(0)("StudentID")
-               SubmittedOn = dt.Rows(0)("SubmittedOn")
-               StatusId = dt.Rows(0)("StatusId")
-               Status = GetStatusById(StatusId)
-               Dim ce As CourseEventData
-               Dim Student As Student
-               dt = dsRegistration.Tables(1)
-               For i As Integer = 0 To dt.Rows.Count - 1
-                  ce = New CourseEventData
-                  With ce
-                     .CourseId = dt.Rows(i)("CourseId")
-                     .CourseNumber = dt.Rows(i)("CourseNumber")
-                     .NumberOfSeats = dt.Rows(i)("NumberOfSeats")
-                     .RegistrationFee = dt.Rows(i)("RegistrationFee")
-                     .RegistrationId = RegistrationId
-                     .Tuition = dt.Rows(i)("Tuition")
-                     CoursesTaken.Add(ce)
-                  End With
-               Next
-               dt = dsRegistration.Tables(2)
-               If dt.Rows.Count > 0 Then
-                  Student = New Student
-                  With Student
-                     .StudentId = dt.Rows(0)("StudentId")
-                     .FirstName = dt.Rows(0)("StudentFirstName")
-                     .LastName = dt.Rows(0)("StudentLastName")
-                     .Email = dt.Rows(0)("Email")
-                     .Address = dt.Rows(0)("Address")
-                     .City = dt.Rows(0)("City")
-                     .State = dt.Rows(0)("State")
-                     .ZipCode = dt.Rows(0)("ZipCode")
-                     .WorkDayPhone = dt.Rows(0)("WorkDayPhone")
-                     .HomeEveningPhone = dt.Rows(0)("HomeEveningPhone")
-                     .WorkDayPhone = dt.Rows(0)("WorkDayPhone")
-                     .CellPhone = dt.Rows(0)("CellPhone")
-                     .DateFirstEnrolled = dt.Rows(0)("DateFirstEnrolled")
-                     .isSubscribed = False
-                     If IsDBNull(dt.Rows(0)("Subscribed")) = False AndAlso dt.Rows(0)("Subscribed") = 1 Then
-                        .isSubscribed = True
-                     End If
-                  End With
-                  Me.Student = Student
-               End If
+		Public ReadOnly Property TotalAmount() As Decimal
+			Get
+				Dim t As Decimal
+				Dim c As CourseEventData
+				For i As Integer = 1 To CoursesTaken.Count
+					c = CoursesTaken.Item(i)
+					t += c.Tuition
+				Next
+				TotalAmount = t
+			End Get
+		End Property
+		Public Property ErrorMessage() As String
+			Get
+				ErrorMessage = _errorMessage
+			End Get
+			Set(ByVal Value As String)
+				_errorMessage = Value
+			End Set
+		End Property
+		Public Property ConnectionString() As String
+			Get
+				ConnectionString = _connectionString
+			End Get
+			Set(ByVal Value As String)
+				_connectionString = Value
+			End Set
+		End Property
+		Private Sub ClearRegistration()
+			_coursesTaken = New Collection
+			Status = "Submitted"
+			StatusId = 1
+			SubmittedOn = Now()
+			RegistrationId = 0
+			_student = New Student
+			ProcessedBy = ""
+			ProcessedOn = Nothing
+		End Sub
+		Private Function GetStatusById(ByVal StatusId As Integer) As String
+			Dim cs As New RegistrationStatus
+			Dim Status As String = ""
+			If Not Statuses Is Nothing Then
+				For i As Integer = 1 To Statuses.Count
+					cs = Statuses(i)
+					If cs.StatusId = StatusId Then
+						Status = cs.Description
+						Exit For
+					End If
+				Next
+			End If
+			GetStatusById = Status
+		End Function
+		Private Function GetStatusIdByStatusDescription(ByVal StatusDescription As String) As Integer
+			Dim cs As New RegistrationStatus
+			Dim StatusId As Integer = 0
+			If Not Statuses Is Nothing Then
+				For i As Integer = 1 To Statuses.Count
+					cs = Statuses(i)
+					If cs.Description.ToLower = StatusDescription.ToLower Then
+						StatusId = cs.StatusId
+						Exit For
+					End If
+				Next
+			End If
+			GetStatusIdByStatusDescription = StatusId
+		End Function
+		Public Sub LoadRegistration(ByVal RegistrationId As Integer)
+			Dim oDC As New RegistrationDC
+			Dim dsRegistration As New DataSet
+			Dim dt As DataTable
+			dsRegistration = oDC.GetRegistrationSetById(RegistrationId, Me.ConnectionString)
+			If dsRegistration.Tables.Count > 0 Then
+				'fill the properties with 
+				If dsRegistration.Tables(0).Rows.Count > 0 Then
+					'assume 1 row
+					dt = dsRegistration.Tables(0)
+					RegistrationId = dt.Rows(0)("CORegistrationID")
+					StudentId = dt.Rows(0)("StudentID")
+					SubmittedOn = dt.Rows(0)("SubmittedOn")
+					StatusId = dt.Rows(0)("StatusId")
+					Status = GetStatusById(StatusId)
+					Dim ce As CourseEventData
+					Dim Student As Student
+					dt = dsRegistration.Tables(1)
+					For i As Integer = 0 To dt.Rows.Count - 1
+						ce = New CourseEventData
+						With ce
+							.CourseId = dt.Rows(i)("CourseId")
+							.CourseNumber = dt.Rows(i)("CourseNumber")
+							.NumberOfSeats = dt.Rows(i)("NumberOfSeats")
+							.RegistrationFee = dt.Rows(i)("RegistrationFee")
+							.RegistrationId = RegistrationId
+							.Tuition = dt.Rows(i)("Tuition")
+							CoursesTaken.Add(ce)
+						End With
+					Next
+					dt = dsRegistration.Tables(2)
+					If dt.Rows.Count > 0 Then
+						Student = New Student
+						With Student
+							.StudentId = dt.Rows(0)("StudentId")
+							.FirstName = dt.Rows(0)("StudentFirstName")
+							.LastName = dt.Rows(0)("StudentLastName")
+							.Email = dt.Rows(0)("Email")
+							.Address = dt.Rows(0)("Address")
+							.City = dt.Rows(0)("City")
+							.State = dt.Rows(0)("State")
+							.ZipCode = dt.Rows(0)("ZipCode")
+							.WorkDayPhone = dt.Rows(0)("WorkDayPhone")
+							.HomeEveningPhone = dt.Rows(0)("HomeEveningPhone")
+							.WorkDayPhone = dt.Rows(0)("WorkDayPhone")
+							.CellPhone = dt.Rows(0)("CellPhone")
+							.DateFirstEnrolled = dt.Rows(0)("DateFirstEnrolled")
+							.isSubscribed = False
+							If IsDBNull(dt.Rows(0)("Subscribed")) = False AndAlso dt.Rows(0)("Subscribed") = 1 Then
+								.isSubscribed = True
+							End If
+						End With
+						Me.Student = Student
+					End If
 
-            End If
-         Else
-            Me.ClearRegistration()
-         End If
-      End Sub
-      ''' <summary>
-      ''' Current logic: New status need to be the next status. FOr example from Subimetted to Paid or from Paid to In Studentmanager
-      ''' </summary>
-      ''' <param name="CourseRegistrationId"></param>
-      ''' <param name="NewStatus"></param>
-      ''' <returns></returns>
-      ''' <remarks></remarks>
-      Public Function ChangeStatus(ByVal CourseRegistrationId As Integer, ByVal NewStatus As String) As Boolean
-         Dim result As Boolean = False
-         Dim dc As New RegistrationDC
-         'get current status for Business rules
-         Dim dt As DataTable
-         Dim currentStatusId As Integer
-         Dim newStatusId As Integer = 0
-         Dim results As Boolean = False
-         dt = dc.GetRegistrationById(CourseRegistrationId, ConnectionString)
-         If dt.Rows.Count > 0 Then
-            currentStatusId = dt.Rows(0)("StatusId")
-            'get the status Id for new status
-            newStatusId = GetStatusIdByStatusDescription(NewStatus)
-            If currentStatusId + 1 <> newStatusId Then
-            Else
-               'all ok
-               results = dc.ChangeStatus(CourseRegistrationId, newStatusId, Me.ConnectionString)
-            End If
-         End If
-         ChangeStatus = results
-      End Function
-      ''' <summary>
-      ''' Current logic: New status need to be the next status. FOr example from Subimetted to Paid or from Paid to In Studentmanager
-      ''' this is overloading with additional parameter ReferenceNumber (normally the PNRER)
-      ''' </summary>
-      ''' <param name="CourseRegistrationId"></param>
-      ''' <param name="NewStatus"></param>
-      ''' <returns></returns>
-      ''' <remarks></remarks>
-      Public Function ChangeStatus(ByVal CourseRegistrationId As Integer, ByVal NewStatus As String, ByVal PaymentReferenceNumber As String) As Boolean
-         Dim result As Boolean = False
-         Dim dc As New RegistrationDC
-         'get current status for Business rules
-         Dim dt As DataTable
-         Dim currentStatusId As Integer
-         Dim newStatusId As Integer = 0
-         Dim results As Boolean = False
-         dt = dc.GetRegistrationById(CourseRegistrationId, ConnectionString)
-         If dt.Rows.Count > 0 Then
-            currentStatusId = dt.Rows(0)("StatusId")
-            'get the status Id for new status
-            newStatusId = GetStatusIdByStatusDescription(NewStatus)
-            If currentStatusId + 1 <> newStatusId Then
-            Else
-               'all ok
-               results = dc.ChangeStatus(CourseRegistrationId, newStatusId, PaymentReferenceNumber, Me.ConnectionString)
-            End If
-         End If
-         ChangeStatus = results
-      End Function
-      ''' <summary>
-      ''' 
-      ''' </summary>
-      ''' <returns>newly create CourseRegistrationId</returns>
-      ''' <remarks>No transaction at this point
-      ''' Although the object has all the information and the caller can call any of the properties after the save it will return the new reigstrationId for simplicity
-      ''' </remarks>
-      Public Function save() As Integer
-         Dim ErrMsg As String = ""
-         Dim bReturn As Boolean = True 'Returning results
-         Dim dc As New RegistrationDC
-         Dim oStudent As New Student
-         Dim iNewStudentId As Integer = 0
-         Dim iNewRegistrationId As Integer = 0
-         Dim ReturnValue As Integer = 0
-         'oStudent.connectionString = Me.ConnectionString
+				End If
+			Else
+				Me.ClearRegistration()
+			End If
+		End Sub
+		''' <summary>
+		''' Current logic: New status need to be the next status. FOr example from Subimetted to Paid or from Paid to In Studentmanager
+		''' </summary>
+		''' <param name="CourseRegistrationId"></param>
+		''' <param name="NewStatus"></param>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Public Function ChangeStatus(ByVal CourseRegistrationId As Integer, ByVal NewStatus As String) As Boolean
+			Dim result As Boolean = False
+			Dim dc As New RegistrationDC
+			'get current status for Business rules
+			Dim dt As DataTable
+			Dim currentStatusId As Integer
+			Dim newStatusId As Integer = 0
+			Dim results As Boolean = False
+			dt = dc.GetRegistrationById(CourseRegistrationId, ConnectionString)
+			If dt.Rows.Count > 0 Then
+				currentStatusId = dt.Rows(0)("StatusId")
+				'get the status Id for new status
+				newStatusId = GetStatusIdByStatusDescription(NewStatus)
+				If currentStatusId + 1 <> newStatusId Then
+				Else
+					'all ok
+					results = dc.ChangeStatus(CourseRegistrationId, newStatusId, Me.ConnectionString)
+				End If
+			End If
+			ChangeStatus = results
+		End Function
+		''' <summary>
+		''' Current logic: New status need to be the next status. FOr example from Subimetted to Paid or from Paid to In Studentmanager
+		''' this is overloading with additional parameter ReferenceNumber (normally the PNRER)
+		''' </summary>
+		''' <param name="CourseRegistrationId"></param>
+		''' <param name="NewStatus"></param>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Public Function ChangeStatus(ByVal CourseRegistrationId As Integer, ByVal NewStatus As String, ByVal PaymentReferenceNumber As String) As Boolean
+			Dim result As Boolean = False
+			Dim dc As New RegistrationDC
+			'get current status for Business rules
+			Dim dt As DataTable
+			Dim currentStatusId As Integer
+			Dim newStatusId As Integer = 0
+			Dim results As Boolean = False
+			dt = dc.GetRegistrationById(CourseRegistrationId, ConnectionString)
+			If dt.Rows.Count > 0 Then
+				currentStatusId = dt.Rows(0)("StatusId")
+				'get the status Id for new status
+				newStatusId = GetStatusIdByStatusDescription(NewStatus)
+				If currentStatusId + 1 <> newStatusId Then
+				Else
+					'all ok
+					results = dc.ChangeStatus(CourseRegistrationId, newStatusId, PaymentReferenceNumber, Me.ConnectionString)
+				End If
+			End If
+			ChangeStatus = results
+		End Function
+		''' <summary>
+		''' 
+		''' </summary>
+		''' <returns>newly create CourseRegistrationId</returns>
+		''' <remarks>No transaction at this point
+		''' Although the object has all the information and the caller can call any of the properties after the save it will return the new reigstrationId for simplicity
+		''' </remarks>
+		Public Function save() As Integer
+			Dim ErrMsg As String = ""
+			Dim bReturn As Boolean = True	'Returning results
+			Dim dc As New RegistrationDC
+			Dim oStudent As New Student
+			Dim iNewStudentId As Integer = 0
+			Dim iNewRegistrationId As Integer = 0
+			Dim ReturnValue As Integer = 0
+			'oStudent.connectionString = Me.ConnectionString
 
-         If _connectionString = "" Then
-            bReturn = False
-         Else
-            If Not Me.Student Is Nothing AndAlso Not Me.CoursesTaken Is Nothing AndAlso Me.CoursesTaken.Count > 0 Then
-               'save the student
-               iNewStudentId = _student.CreateStudent(Me.Student)
-               If iNewStudentId = 0 Then
-                  bReturn = False
-               End If
-            End If
-            If iNewStudentId > 0 Then
-               Me.StudentId = iNewStudentId
-               'save registration
-               iNewRegistrationId = dc.insert(Me, Me.ConnectionString)
-               If iNewRegistrationId > 0 Then
-                  Me.RegistrationId = iNewRegistrationId
-                  'Save courseTaken
-                  Dim iNewCourseTakenId As Integer
-                  Dim cedata As New CourseEventData
-                  For i As Integer = 1 To Me.CoursesTaken.Count
-                     cedata = CoursesTaken(i)
-                     cedata.RegistrationId = Me.RegistrationId
-                     iNewCourseTakenId = dc.insertCourseTaken(cedata, Me.ConnectionString)
-                     If iNewCourseTakenId = 0 Then
-                        bReturn = False
-                        Exit For
-                     End If
-                  Next
-               End If
-            End If
-         End If
-         If bReturn = True Then
-            ReturnValue = iNewRegistrationId
-         End If
-         save = ReturnValue
-      End Function
-      Public Function AddCourseEvent(ByVal oCourseEvent As CourseEventData) As Boolean
-         'Return 1
-         Dim bReturn As Boolean
-         Dim oBR As BrokenRules
-         oBR = New BrokenRules
-         bReturn = True
-         ErrorMessage = ""
-         'Verify mandatory fields and set default
-         'CourseId
-         If oCourseEvent.CourseId = 0 Then
-            oBR.Add("CourseId is mandatory")
-         End If
-         If oCourseEvent.CourseNumber = "" Then
-            oBR.Add("Course# is mandatory")
-         End If
-         'Number of seats 0 then 1
-         If oCourseEvent.NumberOfSeats = 0 Then
-            oCourseEvent.NumberOfSeats = 1
-         End If
-         'Ignore - will be set by the save
-         If oCourseEvent.RegistrationId = 0 Then
-         End If
-         If oCourseEvent.Tuition = 0 Then
-            oBR.Add("Tuition cannot be 0")
-         End If
-         If oBR.IsValid = True Then
-            'Make sure uniqu CourseId
-            Dim oCT As CourseEventData
+			If _connectionString = "" Then
+				bReturn = False
+			Else
+				If Not Me.Student Is Nothing AndAlso Not Me.CoursesTaken Is Nothing AndAlso Me.CoursesTaken.Count > 0 Then
+					'save the student
+					iNewStudentId = _student.CreateStudent(Me.Student)
+					If iNewStudentId = 0 Then
+						bReturn = False
+					End If
+				End If
+				If iNewStudentId > 0 Then
+					Me.StudentId = iNewStudentId
+					'save registration
+					iNewRegistrationId = dc.insert(Me, Me.ConnectionString)
+					If iNewRegistrationId > 0 Then
+						Me.RegistrationId = iNewRegistrationId
+						'Save courseTaken
+						Dim iNewCourseTakenId As Integer
+						Dim cedata As New CourseEventData
+						For i As Integer = 1 To Me.CoursesTaken.Count
+							cedata = CoursesTaken(i)
+							cedata.RegistrationId = Me.RegistrationId
+							iNewCourseTakenId = dc.insertCourseTaken(cedata, Me.ConnectionString)
+							If iNewCourseTakenId = 0 Then
+								bReturn = False
+								Exit For
+							End If
+						Next
+					End If
+				End If
+			End If
+			If bReturn = True Then
+				ReturnValue = iNewRegistrationId
+			End If
+			save = ReturnValue
+		End Function
+		Public Function AddCourseEvent(ByVal oCourseEvent As CourseEventData) As Boolean
+			'Return 1
+			Dim bReturn As Boolean
+			Dim oBR As BrokenRules
+			oBR = New BrokenRules
+			bReturn = True
+			ErrorMessage = ""
+			'Verify mandatory fields and set default
+			'CourseId
+			If oCourseEvent.CourseId = 0 Then
+				oBR.Add("CourseId is mandatory")
+			End If
+			If oCourseEvent.CourseNumber = "" Then
+				oBR.Add("Course# is mandatory")
+			End If
+			'Number of seats 0 then 1
+			If oCourseEvent.NumberOfSeats = 0 Then
+				oCourseEvent.NumberOfSeats = 1
+			End If
+			'Ignore - will be set by the save
+			If oCourseEvent.RegistrationId = 0 Then
+			End If
+			If oCourseEvent.Tuition = 0 Then
+				oBR.Add("Tuition cannot be 0")
+			End If
+			If oBR.IsValid = True Then
+				'Make sure uniqu CourseId
+				Dim oCT As CourseEventData
 
-            If _coursesTaken.Count > 0 Then
-               For Each oCT In _coursesTaken
-                  If Not oCT Is Nothing Then
-                     If oCT.CourseId = oCourseEvent.CourseId Then
-                        oBR.Add("Duplicate courses not allowed")
-                        Exit For
-                     End If
-                  End If
-               Next
-            End If
-            _coursesTaken.Add(oCourseEvent)
-         End If
-         ErrorMessage = oBR.ToString
-         AddCourseEvent = oBR.IsValid
-      End Function
-      ''' <summary>
-      ''' Add a course object to the CourseRegistration object. 
-      ''' can Ignore rule Tuition > 0
-      ''' </summary>
-      ''' <param name="oCourseEvent"></param>
-      ''' <param name="IgnoreTuitionZero"></param>
-      ''' <returns></returns>
-      ''' <remarks></remarks>
-      Public Function AddCourseEvent(ByVal oCourseEvent As CourseEventData, ByVal IgnoreTuitionZero As Boolean) As Boolean
-         'Return 1
-         Dim bReturn As Boolean
-         Dim oBR As BrokenRules
-         oBR = New BrokenRules
-         bReturn = True
-         ErrorMessage = ""
-         'Verify mandatory fields and set default
-         'CourseId
-         If oCourseEvent.CourseId = 0 Then
-            oBR.Add("CourseId is mandatory")
-         End If
-         If oCourseEvent.CourseNumber = "" Then
-            oBR.Add("Course# is mandatory")
-         End If
-         'Number of seats 0 then 1
-         If oCourseEvent.NumberOfSeats = 0 Then
-            oCourseEvent.NumberOfSeats = 1
-         End If
-         'Ignore - will be set by the save
-         If oCourseEvent.RegistrationId = 0 Then
-         End If
-         If oCourseEvent.Tuition = 0 And IgnoreTuitionZero = False Then
-            oBR.Add("Tuition cannot be 0")
-         End If
-         If oBR.IsValid = True Then
-            'Make sure uniqu CourseId
-            Dim oCT As CourseEventData
+				If _coursesTaken.Count > 0 Then
+					For Each oCT In _coursesTaken
+						If Not oCT Is Nothing Then
+							If oCT.CourseId = oCourseEvent.CourseId Then
+								oBR.Add("Duplicate courses not allowed")
+								Exit For
+							End If
+						End If
+					Next
+				End If
+				_coursesTaken.Add(oCourseEvent)
+			End If
+			ErrorMessage = oBR.ToString
+			AddCourseEvent = oBR.IsValid
+		End Function
+		''' <summary>
+		''' Add a course object to the CourseRegistration object. 
+		''' can Ignore rule Tuition > 0
+		''' </summary>
+		''' <param name="oCourseEvent"></param>
+		''' <param name="IgnoreTuitionZero"></param>
+		''' <returns></returns>
+		''' <remarks></remarks>
+		Public Function AddCourseEvent(ByVal oCourseEvent As CourseEventData, ByVal IgnoreTuitionZero As Boolean) As Boolean
+			'Return 1
+			Dim bReturn As Boolean
+			Dim oBR As BrokenRules
+			oBR = New BrokenRules
+			bReturn = True
+			ErrorMessage = ""
+			'Verify mandatory fields and set default
+			'CourseId
+			If oCourseEvent.CourseId = 0 Then
+				oBR.Add("CourseId is mandatory")
+			End If
+			If oCourseEvent.CourseNumber = "" Then
+				oBR.Add("Course# is mandatory")
+			End If
+			'Number of seats 0 then 1
+			If oCourseEvent.NumberOfSeats = 0 Then
+				oCourseEvent.NumberOfSeats = 1
+			End If
+			'Ignore - will be set by the save
+			If oCourseEvent.RegistrationId = 0 Then
+			End If
+			If oCourseEvent.Tuition = 0 And IgnoreTuitionZero = False Then
+				oBR.Add("Tuition cannot be 0")
+			End If
+			If oBR.IsValid = True Then
+				'Make sure uniqu CourseId
+				Dim oCT As CourseEventData
 
-            If _coursesTaken.Count > 0 Then
-               For Each oCT In _coursesTaken
-                  If Not oCT Is Nothing Then
-                     If oCT.CourseId = oCourseEvent.CourseId Then
-                        oBR.Add("Duplicate courses not allowed")
-                        Exit For
-                     End If
-                  End If
-               Next
-            End If
-            _coursesTaken.Add(oCourseEvent)
-         End If
-         ErrorMessage = oBR.ToString
-         AddCourseEvent = oBR.IsValid
-      End Function
+				If _coursesTaken.Count > 0 Then
+					For Each oCT In _coursesTaken
+						If Not oCT Is Nothing Then
+							If oCT.CourseId = oCourseEvent.CourseId Then
+								oBR.Add("Duplicate courses not allowed")
+								Exit For
+							End If
+						End If
+					Next
+				End If
+				_coursesTaken.Add(oCourseEvent)
+			End If
+			ErrorMessage = oBR.ToString
+			AddCourseEvent = oBR.IsValid
+		End Function
 
-   End Class
+	End Class
 #End Region
 #Region "CourseEventData"
 
