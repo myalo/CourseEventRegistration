@@ -496,7 +496,7 @@ Namespace CourseEventRegistration
       Private m_Tuition As Decimal
       Private m_NumberOfSeats As Decimal
       Private _registrationFee As Decimal
-      Private m_CourseId As Long
+		Private m_CourseId As Long
       Public Property CourseId() As Long
          Get
             Return m_CourseId
@@ -976,7 +976,7 @@ Namespace CourseEventRegistration
          Dim con As SqlConnection = New SqlConnection
          Dim iNewRegistrationId As Integer
          con.ConnectionString = connectionString
-         Dim cmd As SqlCommand = New SqlCommand("USP_CourseRegistration_Insert1", con)
+			Dim cmd As SqlCommand = New SqlCommand("USP_CourseRegistration_Insert1", con)
          cmd.CommandType = CommandType.StoredProcedure
          cmd.Parameters.Add("ReturnValue", SqlDbType.Int)
          cmd.Parameters("ReturnValue").Direction = ParameterDirection.ReturnValue
@@ -993,15 +993,15 @@ Namespace CourseEventRegistration
          End If
          cmd.Parameters.AddWithValue("@ProcessedBy", registration.ProcessedBy)
 			cmd.Parameters.AddWithValue("@ProcessorsRemarks", registration.ProcessorRemarks)
-         Try
-            con.Open()
-            cmd.ExecuteNonQuery()
-            If cmd.Parameters.Count > 0 Then
-               iNewRegistrationId = cmd.Parameters(1).Value
-            End If
-         Catch ex As Exception
+			Try
+				con.Open()
+				cmd.ExecuteNonQuery()
+				If cmd.Parameters.Count > 0 Then
+					iNewRegistrationId = cmd.Parameters(1).Value
+				End If
+			Catch ex As Exception
 
-         End Try
+			End Try
 
          Return iNewRegistrationId
       End Function
